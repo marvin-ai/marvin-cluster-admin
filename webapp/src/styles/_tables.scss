@@ -1,0 +1,40 @@
+.table-default{
+  font-size: 13px;
+  color: $grey-2;
+  vertical-align: middle;
+  input[type="checkbox"]{
+    margin-top: 15px;
+  }
+  thead{
+    background-color: $white;
+    border: none;
+    th{
+      border-top: 1px solid $grey-1;
+      padding: 10px;
+    }
+  }
+  tbody{
+    border: none;
+    td {
+      border-top: 1px solid $grey-1;
+      padding: 0 10px;
+    }
+    .endpoint{
+      display: block;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 100px;
+    }
+    .button.secondary{
+      margin: 10px 10px 10px 0;
+    }
+    .label-toggle{
+      margin-top: 15px;
+    }
+    .icon-status{
+      font-size: 18px;
+      color: $grey-3;
+    }
+  }
+}

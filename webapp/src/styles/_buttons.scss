@@ -1,0 +1,26 @@
+.button{
+    background-color: $blue;
+}
+
+.button-round{
+    border-radius: 100px;
+}
+
+.button.hollow.secondary{
+    border: 1px solid $grey-1;
+    color: $grey-3;
+    font-size: 13px;
+}
+
+.button-download{
+  color: $grey-2;
+  margin-left: 5px;
+}
+
+.button-json{
+  border: 1px solid $grey-1;	
+  border-radius: 3px;
+  padding: 5px 15px;
+  color: $grey-2;
+  margin-left: 5px;
+}

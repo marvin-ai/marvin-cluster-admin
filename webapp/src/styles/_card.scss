@@ -1,0 +1,21 @@
+.card{
+    border: 1px solid $grey-1;
+    border-radius: 3px;
+    padding: 25px;
+    clear: both;
+    font-size: 13px;
+    color: $grey-2;
+    h3{
+        color: $grey-2;	
+        font-size: 20px;
+        border-bottom: 1px solid $grey-1;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    ul{
+        margin-bottom: 20px;
+        li{
+            margin-bottom: 8px;
+        }
+    }
+}
