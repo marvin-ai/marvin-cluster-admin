@@ -1,0 +1,27 @@
+body{
+  font-family: 'Open Sans', sans-serif;
+}
+
+.brand{
+  color: $white;
+  &:hover{
+   color: $white;
+  }
+}
+
+.container{
+  width: 1000px;
+  margin: 0 auto;
+}
+
+.pull-left{
+  float: left;
+}
+
+.pull-right{
+  float: right;
+}
+
+.subtitle{
+  font-size: 24px;
+}
