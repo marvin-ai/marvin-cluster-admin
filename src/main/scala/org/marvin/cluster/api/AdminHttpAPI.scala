@@ -25,13 +25,16 @@ import org.marvin.cluster.api.HttpMarvinApp
 import org.marvin.cluster.manager.executor.ExecutorManagerClient
 import org.marvin.cluster.manager.executor.ExecutorManagerClient.GetMetadata
 import org.marvin.cluster.api.exception.EngineExceptionAndRejectionHandler._
-import spray.json.DefaultJsonProtocol._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import spray.json._
+
 import scala.concurrent._
 import scala.concurrent.duration._
+import scala.util.{Failure, Success}
 
 class AdminHttpAPIImpl() extends AdminHttpAPI
 
-object AdminHttpAPI extends HttpMarvinApp {
+object AdminHttpAPI extends HttpMarvinApp with SprayJsonSupport with DefaultJsonProtocol {
   var system: ActorSystem = _
   var log: LoggingAdapter = _
   var api: AdminHttpAPI = new AdminHttpAPIImpl()
@@ -46,8 +49,13 @@ object AdminHttpAPI extends HttpMarvinApp {
       handleExceptions(marvinEngineExceptionHandler){
         get {
           path("engines") {
-            val responseMessage = api.engines()
-            complete(responseMessage)
+            val responseFuture = api.engines()
+            onComplete(responseFuture){maybeResponse =>
+              maybeResponse match{
+                case Success(response) => complete(DefaultHttpResponse(response))
+                case Failure(e) => failWith(e)
+              }
+            }
           }
         }
       }
