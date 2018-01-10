@@ -48,8 +48,8 @@ class AdminHttpAPITest extends WordSpec with ScalatestRouteTest with Matchers wi
 
       check {
         status shouldEqual StatusCode.int2StatusCode(200)
-        contentType shouldEqual ContentTypes.`text/plain(UTF-8)`
-        responseAs[String] shouldEqual "Done"
+        contentType shouldEqual ContentTypes.`application/json`
+        responseAs[String] shouldEqual """{"result":"Done"}"""
       }(result)
     }
   }
