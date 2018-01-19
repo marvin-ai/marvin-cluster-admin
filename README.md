@@ -4,7 +4,7 @@
 
 This is the component responsible for the administration of many engine clusters.
 
-The latest stable build can be downloaded from [here](https://s3.amazonaws.com/marvin-engine-executor/marvin-cluster-admin-assembly-0.0.1.jar). 
+The latest stable build can be downloaded from [here](https://s3.amazonaws.com/marvin-cluster-admin/marvin-cluster-admin-assembly-0.0.1.jar).
 
 ### install requirements
 
