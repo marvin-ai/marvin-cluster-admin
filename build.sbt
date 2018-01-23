@@ -19,13 +19,23 @@ version := "0.0.1"
 
 scalaVersion := "2.12.3"
 
+organization := "org.marvin"
+
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.0.10",
   "com.typesafe.akka" %% "akka-http-spray-json" % "10.0.10",
   "org.clapper"       %% "grizzled-slf4j" % "1.3.0",
   "com.typesafe.akka" %% "akka-http-testkit" % "10.0.10" % Test,
   "org.scalatest"     %% "scalatest"     % "3.0.1" % Test,
-  "org.scalamock"     %% "scalamock-scalatest-support" % "3.5.0" % Test
+  "org.scalamock"     %% "scalamock-scalatest-support" % "3.5.0" % Test,
+  "org.marvin" %% "marvin-engine-executor" % "0.0.1",
+  "org.springframework" % "spring-context" % "5.0.1.RELEASE",
+  "org.springframework" % "spring-tx" % "4.3.12.RELEASE",
+  "org.springframework" % "spring-jdbc" % "4.3.12.RELEASE",
+  "org.springframework" % "spring-orm" % "4.3.12.RELEASE",
+  "mysql" % "mysql-connector-java" % "5.1.38",
+  "org.hibernate" % "hibernate-core" % "5.2.11.Final" exclude("dom4j", "dom4j"),
+  "dom4j" % "dom4j" % "1.6"
 )
 
 mainClass in (Compile, run) := Some("org.marvin.cluster.api.AdminHttpAPI")
