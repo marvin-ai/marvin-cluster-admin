@@ -1,12 +1,21 @@
 package org.marvin.cluster.manager.entity
 
 import javax.persistence._
+
+import org.marvin.model.EngineActionMetadata
+
 import scala.beans.BeanProperty
 
+object ActionMetadataEntity {
+  def getInstance(actionMetadata: EngineActionMetadata, mtdataEntity: MetadataEntity): ActionMetadataEntity = {
+    new ActionMetadataEntity(name = actionMetadata.name, aType = actionMetadata.actionType, port = actionMetadata.port, host = actionMetadata.host,
+      aToPersist = actionMetadata.artifactsToPersist.mkString(","), aToLoad = actionMetadata.artifactsToLoad.mkString(","), metadataEntity = mtdataEntity)
+  }
+}
 
 @Entity
 @Table(name = "engineActionMetadata")
-class ActionMetadataEntity(name: String, aType: String, port: Int, host: String, aToPersist: String, aToLoad: String, x: MetadataEntity) {
+class ActionMetadataEntity(name: String, aType: String, port: Int, host: String, aToPersist: String, aToLoad: String, metadataEntity: MetadataEntity) {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,11 +42,7 @@ class ActionMetadataEntity(name: String, aType: String, port: Int, host: String,
 
   @BeanProperty
   @ManyToOne
-  @JoinColumn(name="metadataID")
-  var metadataID: MetadataEntity = x
-//
-//  def this() = this(null, null, 0, null, null, null)
-//
-//  override def toString = id + " = " + metadataID
+  @JoinColumn(name="metadata_id")
+  var metadataID: MetadataEntity = metadataEntity
 
 }

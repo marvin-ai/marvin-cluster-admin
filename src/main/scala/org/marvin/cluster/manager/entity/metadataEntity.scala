@@ -16,27 +16,36 @@
  */
 package org.marvin.cluster.manager.entity
 
+import java.util
 import javax.persistence._
-import scala.collection.JavaConverters._
-import org.marvin.model.{EngineActionMetadata, EngineMetadata}
+
+import org.marvin.model.EngineMetadata
 
 import scala.beans.BeanProperty
 
 object MetadataEntity {
   def getInstance(metadata: EngineMetadata): MetadataEntity = {
-    new MetadataEntity(name = metadata.name, version = metadata.version, enType = metadata.engineType, artifactsRPath = metadata.artifactsRemotePath,
-      artifactMType = metadata.artifactManagerType, bucketName = metadata.s3BucketName, pipeActions = metadata.pipelineActions,
+
+    val metadataEntity = new MetadataEntity(name = metadata.name, version = metadata.version, enType = metadata.engineType, artifactsRPath = metadata.artifactsRemotePath,
+      artifactMType = metadata.artifactManagerType, bucketName = metadata.s3BucketName, pipeActions = metadata.pipelineActions.mkString(","),
       onlineTimeout = metadata.onlineActionTimeout, healthTimeout = metadata.healthCheckTimeout, rlTimeout = metadata.reloadTimeout,
-      rlStateTimeout = metadata.reloadStateTimeout, btActionTimeout = metadata.batchActionTimeout, hfHost = metadata.hdfsHost,
-      acts = metadata.actions)
+      rlStateTimeout = metadata.reloadStateTimeout.get, btActionTimeout = metadata.batchActionTimeout, hfHost = metadata.hdfsHost,
+      acts = new util.ArrayList[ActionMetadataEntity])
+
+    val actionEntity: java.util.List[ActionMetadataEntity] = new util.ArrayList[ActionMetadataEntity]
+    for (action <- metadata.actions) {actionEntity.add(ActionMetadataEntity.getInstance(action, metadataEntity))}
+
+    metadataEntity.actions = actionEntity
+    metadataEntity
+
   }
 }
 
 @Entity
 @Table(name = "engineMetadata")
 class MetadataEntity(name: String, version: String, enType: String, artifactsRPath: String, artifactMType: String, bucketName: String,
-                     pipeActions: List[String], onlineTimeout: Int, healthTimeout: Int, rlTimeout: Int, rlStateTimeout: Option[Int],
-                     btActionTimeout: Int, hfHost: String, acts: List[EngineActionMetadata]) {
+                     pipeActions: String, onlineTimeout: Int, healthTimeout: Int, rlTimeout: Int, rlStateTimeout: Int,
+                     btActionTimeout: Int, hfHost: String, acts: java.util.List[ActionMetadataEntity]) {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,7 +71,7 @@ class MetadataEntity(name: String, version: String, enType: String, artifactsRPa
   var s3BucketName: String = bucketName
 
   @BeanProperty
-  var pipelineActions: List[String] = pipeActions
+  var pipelineActions: String = pipeActions
 
   @BeanProperty
   var onlineActionTimeout: Int = onlineTimeout
@@ -74,7 +83,7 @@ class MetadataEntity(name: String, version: String, enType: String, artifactsRPa
   var reloadTimeout: Int = rlTimeout
 
   @BeanProperty
-  var reloadStateTimeout: Option[Int] = rlStateTimeout
+  var reloadStateTimeout: Int = rlStateTimeout
 
   @BeanProperty
   var batchActionTimeout: Int = btActionTimeout
@@ -84,9 +93,9 @@ class MetadataEntity(name: String, version: String, enType: String, artifactsRPa
 
   @OneToMany(mappedBy = "metadataID", targetEntity = classOf[ActionMetadataEntity], fetch = FetchType.LAZY, cascade = Array(CascadeType.ALL))
   @BeanProperty
-  var actions: java.util.List[EngineActionMetadata] = acts.asJava
+  var actions: java.util.List[ActionMetadataEntity] = acts
 
-  def this() = this(null, null, null, null, null, null, null, 0, 0, 0, Option(0), 0, null, null)
+  def this() = this(null, null, null, null, null, null, null, 0, 0, 0, 0, 0, null, null)
 
   override def toString = id + " = " + engineName + " " + engineVersion + " " + engineType + " " +
     artifactsRemotePath + " " + artifactManagerType + " " + s3BucketName + " " + pipelineActions + " " +
