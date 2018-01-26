@@ -21,11 +21,6 @@
     </property>
   </bean>
 
-  <!--<bean id="dataSource"-->
-  <!--class="org.springframework.jdbc.datasource.DriverManagerDataSource"-->
-  <!--p:driverClassName="org.hsqldb.jdbcDriver" p:url="jdbc:hsqldb:mem:engine_metadata"-->
-  <!--p:username="" p:password=""/>-->
-
   <bean id="dataSource" class="org.marvin.cluster.manager.metadata.DataSource"/>
 
   <bean id="entityManagerFactory"
