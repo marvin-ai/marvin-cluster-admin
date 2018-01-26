@@ -39,5 +39,7 @@ libraryDependencies ++= Seq(
   "dom4j" % "dom4j" % "1.6"
 )
 
+resolvers += Resolver.mavenLocal
+
 mainClass in (Compile, run) := Some("org.marvin.cluster.api.AdminHttpAPI")
 mainClass in assembly := Some("org.marvin.custer.api.AdminHttpAPI")
