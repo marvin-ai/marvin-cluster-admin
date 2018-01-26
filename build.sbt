@@ -34,6 +34,7 @@ libraryDependencies ++= Seq(
   "org.springframework" % "spring-jdbc" % "4.3.12.RELEASE",
   "org.springframework" % "spring-orm" % "4.3.12.RELEASE",
   "mysql" % "mysql-connector-java" % "5.1.38",
+  "org.hsqldb" % "hsqldb" % "2.2.8",
   "org.hibernate" % "hibernate-core" % "5.2.11.Final" exclude("dom4j", "dom4j"),
   "dom4j" % "dom4j" % "1.6"
 )

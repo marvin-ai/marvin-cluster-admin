@@ -16,13 +16,12 @@
  */
 package org.marvin.cluster.manager.metadata
 
+import akka.Done
 import akka.actor.{Actor, ActorLogging}
 import org.marvin.cluster.manager.entity.MetadataEntity
 import org.marvin.cluster.manager.metadata.MetadataManager.Save
 import org.marvin.model.EngineMetadata
 import org.springframework.context.support.ClassPathXmlApplicationContext
-
-import scala.util.Success
 
 object MetadataManager {
   case class Save(metadata: EngineMetadata)
@@ -41,7 +40,7 @@ class MetadataManager() extends Actor with ActorLogging {
 
       metaDataSaver.save(entity)
 
-      sender ! Success
+      sender ! Done
 
   }
 }

@@ -23,8 +23,8 @@
 
   <!--<bean id="dataSource"-->
   <!--class="org.springframework.jdbc.datasource.DriverManagerDataSource"-->
-  <!--p:driverClassName="org.hsqldb.jdbcDriver" p:url="jdbc:hsqldb:mem:DataExecutor"-->
-  <!--p:username="sa" p:password=""/>-->
+  <!--p:driverClassName="org.hsqldb.jdbcDriver" p:url="jdbc:hsqldb:mem:engine_metadata"-->
+  <!--p:username="" p:password=""/>-->
 
   <bean id="dataSource" class="org.marvin.cluster.manager.metadata.DataSource"/>
 
@@ -39,9 +39,9 @@
     <property name="dataSource" ref="dataSource"/>
     <property name="jpaPropertyMap">
       <map>
-        <entry key="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+        <entry key="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
         <entry key="hibernate.connection.charSet" value="UTF-8"/>
-        <entry key="hibernate.hbm2ddl.auto" value="create"/>
+        <entry key="hibernate.hbm2ddl.auto" value="update"/>
         <entry key="hibernate.show.sql" value="true"/>
       </map>
     </property>
