@@ -27,8 +27,8 @@ import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
 
 import scala.concurrent.duration._
 
-class MetadataSaverTest extends TestKit(
-  ActorSystem("MetadataSaverTest", ConfigFactory.parseString("""akka.loggers = ["akka.testkit.TestEventListener"]""")))
+class MetadataDaoTest extends TestKit(
+  ActorSystem("MetadataDaoTest", ConfigFactory.parseString("""akka.loggers = ["akka.testkit.TestEventListener"]""")))
   with ImplicitSender with WordSpecLike with Matchers with BeforeAndAfterAll {
 
   override def afterAll {
@@ -39,7 +39,7 @@ class MetadataSaverTest extends TestKit(
 
     "send Done message" in {
 
-      val metadataSaver = system.actorOf(Props(new MetadataManager()))
+      val metadataDao = system.actorOf(Props(new MetadataManager()))
 
       val metadata = EngineMetadata(
         name = "test",
@@ -64,7 +64,7 @@ class MetadataSaverTest extends TestKit(
         version = "1"
       )
 
-      metadataSaver ! Save(metadata)
+      metadataDao ! Save(metadata)
       within(8000 millis) {
         expectMsg(Done)
       }

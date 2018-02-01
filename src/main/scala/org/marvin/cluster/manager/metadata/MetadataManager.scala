@@ -36,7 +36,7 @@ class MetadataManager() extends Actor with ActorLogging {
       log.info("Message Received!")
       val entity = MetadataEntity.getInstance(metadata)
 
-      val metaDataSaver: MetadataSaver = ctx.getBean(classOf[MetadataSaver])
+      val metaDataSaver: MetadataDao = ctx.getBean(classOf[MetadataDao])
 
       metaDataSaver.save(entity)
 

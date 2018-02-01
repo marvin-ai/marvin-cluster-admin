@@ -24,9 +24,9 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.{Propagation, Transactional}
 
 
-@Repository("MetadataSaver")
+@Repository("MetadataDao")
 @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-class MetadataSaver {
+class MetadataDao {
 
   @Autowired
   var entityManager: EntityManager = _
