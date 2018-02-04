@@ -19,9 +19,11 @@ package org.marvin.cluster.manager.metadata
 import javax.persistence.EntityManager
 
 import org.marvin.cluster.manager.entity.MetadataEntity
+import org.marvin.model.EngineMetadata
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.{Propagation, Transactional}
+import scala.collection.JavaConverters._
 
 
 @Repository("MetadataDao")
@@ -37,6 +39,15 @@ class MetadataDao {
   def save(entity: MetadataEntity): Unit = entity.id match {
     case 0 => entityManager.persist(entity)
     case _ => entityManager.merge(entity)
+  }
+
+  def getByID(id: Int): Option[EngineMetadata] = {
+    Option(entityManager.find(classOf[EngineMetadata], id))
+  }
+
+  def getByName(name: String): List[EngineMetadata] = {
+    entityManager.createQuery("From engine_metadata Where engineName = :name", classOf[EngineMetadata])
+      .setParameter("name", name).getResultList.asScala.toList
   }
 
 }
