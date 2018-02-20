@@ -19,8 +19,8 @@ package org.marvin.cluster.manager.entity
 import java.util
 import javax.persistence._
 
-import org.marvin.model.EngineMetadata
-
+import org.marvin.model.{EngineActionMetadata, EngineMetadata}
+import scala.collection.JavaConverters._
 import scala.beans.BeanProperty
 
 object MetadataEntity {
@@ -37,6 +37,21 @@ object MetadataEntity {
 
     metadataEntity.actions = actionEntity
     metadataEntity
+
+  }
+
+  def getObject(metadataEntity: MetadataEntity) : EngineMetadata = {
+
+    val pipelineActionList: List[String] = metadataEntity.pipelineActions.split(",").toList
+
+    val engineMetadata = new EngineMetadata(name = metadataEntity.engineName, version = metadataEntity.engineVersion, engineType = metadataEntity.engineType,
+      artifactsRemotePath = metadataEntity.artifactsRemotePath, artifactManagerType = metadataEntity.artifactManagerType, s3BucketName = metadataEntity.s3BucketName,
+      pipelineActions = pipelineActionList, onlineActionTimeout = metadataEntity.onlineActionTimeout, healthCheckTimeout = metadataEntity.healthCheckTimeout,
+      reloadTimeout = metadataEntity.reloadTimeout, reloadStateTimeout = Option(metadataEntity.reloadStateTimeout), batchActionTimeout = metadataEntity.batchActionTimeout,
+      hdfsHost = metadataEntity.hdfsHost, actions = List[EngineActionMetadata]())
+
+    var actionMetadata: List[EngineActionMetadata] = _
+    for ()
 
   }
 }
@@ -99,7 +114,7 @@ class MetadataEntity(name: String, version: String, enType: String, artifactsRPa
 
   override def toString = id + " = " + engineName + " " + engineVersion + " " + engineType + " " +
     artifactsRemotePath + " " + artifactManagerType + " " + s3BucketName + " " + pipelineActions + " " +
-    onlineActionTimeout + " " + healthCheckTimeout + reloadTimeout + " " + reloadStateTimeout + " " +
-    batchActionTimeout + " " + hdfsHost + " " + actions
+    onlineActionTimeout + " " + healthCheckTimeout + " " + reloadTimeout + " " + reloadStateTimeout + " " +
+    batchActionTimeout + " " + hdfsHost
 
 }

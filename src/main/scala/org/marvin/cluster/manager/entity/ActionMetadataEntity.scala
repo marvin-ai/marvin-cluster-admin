@@ -27,6 +27,17 @@ object ActionMetadataEntity {
     new ActionMetadataEntity(name = actionMetadata.name, aType = actionMetadata.actionType, port = actionMetadata.port, host = actionMetadata.host,
       aToPersist = actionMetadata.artifactsToPersist.mkString(","), aToLoad = actionMetadata.artifactsToLoad.mkString(","), metadataEntity = mtdataEntity)
   }
+
+  def getObject(actionMetadataEntity: ActionMetadataEntity): EngineActionMetadata = {
+    val artifactsToPersistList: List[String] = actionMetadataEntity.artifactsToPersist.split(",").toList
+    val artifactsToLoadList: List[String] = actionMetadataEntity.artifactsToLoad.split(",").toList
+
+    val engineActionMetadata = new EngineActionMetadata(name = actionMetadataEntity.actionName, actionType = actionMetadataEntity.actionType,
+      port = actionMetadataEntity.actionPort, host = actionMetadataEntity.actionHost, artifactsToPersist = artifactsToPersistList,
+      artifactsToLoad = artifactsToLoadList)
+
+    engineActionMetadata
+  }
 }
 
 @Entity
@@ -60,5 +71,8 @@ class ActionMetadataEntity(name: String, aType: String, port: Int, host: String,
   @ManyToOne
   @JoinColumn(name="metadata_id")
   var metadataID: MetadataEntity = metadataEntity
+
+  override def toString = id + " = " + actionName + " " + actionType + " " + actionPort + " " +
+    actionHost + " " + artifactsToPersist + " " + artifactsToLoad + " " + metadataID
 
 }

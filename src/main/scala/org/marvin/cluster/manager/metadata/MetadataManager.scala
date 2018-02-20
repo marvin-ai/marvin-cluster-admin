@@ -47,7 +47,7 @@ class MetadataManager() extends Actor with ActorLogging {
 
       metaDataDao.getByID(id) match {
         case Some(x) => println(x)
-        case none => println("No engine found with id 3")
+        case none => log.info("No engine found with id: " + id)
       }
       sender ! Done
 

@@ -28,7 +28,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-testkit" % "10.0.10" % Test,
   "org.scalatest"     %% "scalatest"     % "3.0.1" % Test,
   "org.scalamock"     %% "scalamock-scalatest-support" % "3.5.0" % Test,
-  "org.marvin" %% "marvin-engine-executor" % "0.0.1",
+  "com.github.marvin-ai" %% "marvin-engine-executor" % "0.0.2",
   "org.springframework" % "spring-context" % "5.0.1.RELEASE",
   "org.springframework" % "spring-tx" % "4.3.12.RELEASE",
   "org.springframework" % "spring-jdbc" % "4.3.12.RELEASE",

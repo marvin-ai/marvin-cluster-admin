@@ -21,7 +21,7 @@ import akka.actor.{ActorSystem, Props}
 import akka.testkit.{ImplicitSender, TestKit}
 import com.typesafe.config.ConfigFactory
 import org.marvin.cluster.manager.metadata.MetadataManager
-import org.marvin.cluster.manager.metadata.MetadataManager.Save
+import org.marvin.cluster.manager.metadata.MetadataManager.{GetById, Save}
 import org.marvin.model.{EngineActionMetadata, EngineMetadata}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
 
@@ -64,8 +64,9 @@ class MetadataDaoTest extends TestKit(
         version = "1"
       )
 
-      metadataDao ! Save(metadata)
-      within(8000 millis) {
+//      metadataDao ! Save(metadata)
+      metadataDao ! GetById(1)
+      within(15000 millis) {
         expectMsg(Done)
       }
     }

@@ -41,12 +41,12 @@ class MetadataDao {
     case _ => entityManager.merge(entity)
   }
 
-  def getByID(id: Int): Option[EngineMetadata] = {
-    Option(entityManager.find(classOf[EngineMetadata], id))
+  def getByID(id: Int): Option[MetadataEntity] = {
+    Option(entityManager.find(classOf[MetadataEntity], id))
   }
 
-  def getByName(name: String): List[EngineMetadata] = {
-    entityManager.createQuery("From engine_metadata Where engineName = :name", classOf[EngineMetadata])
+  def getByName(name: String): List[MetadataEntity] = {
+    entityManager.createQuery("From engine_metadata Where engineName = :name", classOf[MetadataEntity])
       .setParameter("name", name).getResultList.asScala.toList
   }
 
