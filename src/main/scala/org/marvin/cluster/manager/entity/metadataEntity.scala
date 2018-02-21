@@ -97,9 +97,9 @@ class MetadataEntity(name: String, version: String, enType: String, artifactsRPa
 
   def this() = this(null, null, null, null, null, null, null, 0, 0, 0, 0, 0, null, null)
 
-  override def toString = id + " = " + engineName + " " + engineVersion + " " + engineType + " " +
+  override def toString = "id: " + id + " = " + engineName + " " + engineVersion + " " + engineType + " " +
     artifactsRemotePath + " " + artifactManagerType + " " + s3BucketName + " " + pipelineActions + " " +
     onlineActionTimeout + " " + healthCheckTimeout + reloadTimeout + " " + reloadStateTimeout + " " +
-    batchActionTimeout + " " + hdfsHost + " " + actions
+    batchActionTimeout + " " + hdfsHost + " "
 
 }

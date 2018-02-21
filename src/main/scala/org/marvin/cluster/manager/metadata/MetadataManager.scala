@@ -19,12 +19,13 @@ package org.marvin.cluster.manager.metadata
 import akka.Done
 import akka.actor.{Actor, ActorLogging}
 import org.marvin.cluster.manager.entity.MetadataEntity
-import org.marvin.cluster.manager.metadata.MetadataManager.Save
+import org.marvin.cluster.manager.metadata.MetadataManager.{GetById, Save}
 import org.marvin.model.EngineMetadata
 import org.springframework.context.support.ClassPathXmlApplicationContext
 
 object MetadataManager {
   case class Save(metadata: EngineMetadata)
+  case class GetById(id: Int)
 }
 
 class MetadataManager() extends Actor with ActorLogging {
@@ -40,6 +41,18 @@ class MetadataManager() extends Actor with ActorLogging {
 
       metaDataSaver.save(entity)
 
+      sender ! Done
+
+    case GetById(id) =>
+      log.info("GetById Message Received!")
+      val metaDataDao: MetadataSaver = ctx.getBean(classOf[MetadataSaver])
+
+      // println for result test only, in next issue metadata_loader,
+      // println will be substituted by entity/objet converter.
+      metaDataDao.getByID(id) match {
+        case Some(x) => println(x)
+        case none => log.info("No engine found with id: " + id)
+      }
       sender ! Done
 
   }

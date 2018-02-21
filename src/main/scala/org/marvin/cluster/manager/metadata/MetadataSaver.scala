@@ -39,4 +39,8 @@ class MetadataSaver {
     case _ => entityManager.merge(entity)
   }
 
+  def getByID(id: Int): Option[MetadataEntity] = {
+    Option(entityManager.find(classOf[MetadataEntity], id))
+  }
+
 }

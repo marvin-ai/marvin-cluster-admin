@@ -21,7 +21,7 @@ import akka.actor.{ActorSystem, Props}
 import akka.testkit.{ImplicitSender, TestKit}
 import com.typesafe.config.ConfigFactory
 import org.marvin.cluster.manager.metadata.MetadataManager
-import org.marvin.cluster.manager.metadata.MetadataManager.Save
+import org.marvin.cluster.manager.metadata.MetadataManager.{GetById, Save}
 import org.marvin.model.{EngineActionMetadata, EngineMetadata}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
 
@@ -65,6 +65,40 @@ class MetadataSaverTest extends TestKit(
       )
 
       metadataSaver ! Save(metadata)
+      within(8000 millis) {
+        expectMsg(Done)
+      }
+    }
+
+    "print result metadata information and send Done message" in {
+
+      val metadataSaver = system.actorOf(Props(new MetadataManager()))
+
+      val metadata = EngineMetadata(
+        name = "test",
+        actions = List[EngineActionMetadata](
+          new EngineActionMetadata(name = "predictor", actionType = "online", port = 777, host = "localhost", artifactsToPersist = List(), artifactsToLoad = List("model")),
+          new EngineActionMetadata(name = "acquisitor", actionType = "batch", port = 778, host = "localhost", artifactsToPersist = List("initial_dataset"), artifactsToLoad = List()),
+          new EngineActionMetadata(name = "tpreparator", actionType = "batch", port = 779, host = "localhost", artifactsToPersist = List("dataset"), artifactsToLoad = List("initial_dataset")),
+          new EngineActionMetadata(name = "trainer", actionType = "batch", port = 780, host = "localhost", artifactsToPersist = List("model"), artifactsToLoad = List("dataset")),
+          new EngineActionMetadata(name = "evaluator", actionType = "batch", port = 781, host = "localhost", artifactsToPersist = List("metrics"), artifactsToLoad = List("dataset", "model"))
+        ),
+        artifactsRemotePath = "",
+        artifactManagerType = "HDFS",
+        s3BucketName = "marvin-artifact-bucket",
+        batchActionTimeout = 100,
+        engineType = "python",
+        hdfsHost = "",
+        healthCheckTimeout = 100,
+        onlineActionTimeout = 100,
+        pipelineActions = List("acquisitor", "tpreparator"),
+        reloadStateTimeout = Some(500),
+        reloadTimeout = 100,
+        version = "1"
+      )
+
+      metadataSaver ! Save(metadata)
+      metadataSaver ! GetById(1)
       within(8000 millis) {
         expectMsg(Done)
       }
