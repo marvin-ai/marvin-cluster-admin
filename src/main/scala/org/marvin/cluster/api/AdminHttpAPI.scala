@@ -14,42 +14,51 @@
  * limitations under the License.
  *
  */
-package org.marvin.executor.api
+package org.marvin.cluster.api
 
 import akka.actor.{ActorRef, ActorSystem, Props, Terminated}
 import akka.event.{Logging, LoggingAdapter}
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.server.Route
 import akka.pattern.ask
 import akka.util.Timeout
-import org.marvin.cluster.api.HttpMarvinApp
+import org.marvin.cluster.api.AdminHttpAPI.DefaultHttpResponse
+import org.marvin.cluster.exception.EngineExceptionAndRejectionHandler._
 import org.marvin.cluster.manager.executor.ExecutorManagerClient
 import org.marvin.cluster.manager.executor.ExecutorManagerClient.GetMetadata
-import org.marvin.cluster.api.exception.EngineExceptionAndRejectionHandler._
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import spray.json._
 
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
-class AdminHttpAPIImpl() extends AdminHttpAPI
+trait AdminHttpAPIFunctions {
+  def engines(): Future[String]
+  def setupSystem(engineFilePath:String, paramsFilePath:String, modelProtocol:String): ActorSystem
+  def startServer(ipAddress: String, port: Int, system: ActorSystem): Unit
+  def terminate(): Future[Terminated]
+  def routes: Route
+}
 
-object AdminHttpAPI extends HttpMarvinApp with SprayJsonSupport with DefaultJsonProtocol {
+object AdminHttpAPI {
+  case class DefaultHttpResponse(result: String)
+}
+
+class AdminHttpAPI() extends HttpMarvinApp with SprayJsonSupport with DefaultJsonProtocol {
+
   var system: ActorSystem = _
   var log: LoggingAdapter = _
-  var api: AdminHttpAPI = new AdminHttpAPIImpl()
   var executorManagerClient: ActorRef = _
   var defaultTimeout:Timeout = _
 
-  case class DefaultHttpResponse(result: String)
   implicit val responseFormat = jsonFormat1(DefaultHttpResponse)
 
-  override def routes: Route =
+  def routes: Route =
     handleRejections(marvinEngineRejectionHandler){
       handleExceptions(marvinEngineExceptionHandler){
         get {
           path("engines") {
-            val responseFuture = api.engines()
+            val responseFuture = engines()
             onComplete(responseFuture){maybeResponse =>
               maybeResponse match{
                 case Success(response) => complete(DefaultHttpResponse(response))
@@ -61,38 +70,31 @@ object AdminHttpAPI extends HttpMarvinApp with SprayJsonSupport with DefaultJson
       }
     }
 
-  def main(args: Array[String]): Unit = {
-    api.startServer("localhost", 8010, AdminHttpAPI.system)
-  }
-}
-
-trait AdminHttpAPI {
-  protected def engines(): Future[String] = {
-    AdminHttpAPI.log.info(s"Request for list engines received.")
-    implicit val ec = AdminHttpAPI.system.dispatchers.lookup("marvin-online-dispatcher")
-    implicit val futureTimeout = AdminHttpAPI.defaultTimeout
-    (AdminHttpAPI.executorManagerClient ? GetMetadata).mapTo[String]
+  def engines(): Future[String] = {
+    log.info(s"Request for list engines received.")
+    implicit val ec = system.dispatchers.lookup("marvin-online-dispatcher")
+    implicit val futureTimeout = defaultTimeout
+    (executorManagerClient ? GetMetadata).mapTo[String]
   }
 
-  protected def setupSystem(engineFilePath:String, paramsFilePath:String, modelProtocol:String): ActorSystem = {
+  def setupSystem(engineFilePath:String, paramsFilePath:String, modelProtocol:String): ActorSystem = {
     val system = ActorSystem(s"MarvinClusterAdminSystem")
 
-    AdminHttpAPI.log = Logging.getLogger(system, this)
-    AdminHttpAPI.defaultTimeout = Timeout(10 seconds)
-    AdminHttpAPI.executorManagerClient = system.actorOf(Props(new ExecutorManagerClient()), name = "executorMgrClient")
+    log = Logging.getLogger(system, this)
+    defaultTimeout = Timeout(10 seconds)
+    executorManagerClient = system.actorOf(Props(new ExecutorManagerClient()), name = "executorMgrClient")
 
     system
   }
 
-  protected def startServer(ipAddress: String, port: Int, system: ActorSystem): Unit = {
+  def startServer(ipAddress: String, port: Int, system: ActorSystem): Unit = {
     scala.sys.addShutdownHook{
       system.terminate()
     }
-    AdminHttpAPI.startServer(ipAddress, port, system)
+    startServer(ipAddress, port, system)
   }
 
-  protected def terminate(): Future[Terminated] = {
-    AdminHttpAPI.system.terminate()
+  def terminate(): Future[Terminated] = {
+    system.terminate()
   }
-
 }
