@@ -65,7 +65,7 @@ class MetadataSaverTest extends TestKit(
       )
 
       metadataSaver ! Save(metadata)
-      within(8000 millis) {
+      within(30000 millis) {
         expectMsg(Done)
       }
     }
@@ -99,7 +99,7 @@ class MetadataSaverTest extends TestKit(
 
       metadataSaver ! Save(metadata)
       metadataSaver ! GetById(1)
-      within(8000 millis) {
+      within(30000 millis) {
         expectMsg(Done)
       }
     }
