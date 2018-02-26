@@ -18,21 +18,22 @@ package org.marvin.cluster.manager.metadata
 
 import javax.persistence.EntityManager
 
-import org.marvin.cluster.manager.entity.MetadataEntity
+import org.marvin.cluster.manager.datasource.DefaultDataSource
+import org.marvin.cluster.manager.metadata.entity.MetadataEntity
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.{Propagation, Transactional}
 
 
-@Repository("MetadataSaver")
+@Repository("MetadataDao")
 @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-class MetadataSaver {
+class MetadataDao {
 
   @Autowired
   var entityManager: EntityManager = _
 
   @Autowired
-  var customDataSource: DataSource = _
+  var customDataSource: DefaultDataSource = _
 
   def save(entity: MetadataEntity): Unit = entity.id match {
     case 0 => entityManager.persist(entity)

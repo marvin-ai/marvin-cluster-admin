@@ -14,22 +14,22 @@
  * limitations under the License.
  *
  */
-package org.marvin.cluster.manager.metadata
+package org.marvin.cluster.manager.datasource
 
 import java.io.FileInputStream
 import java.util.Properties
 
 import org.marvin.util.ConfigurationContext
 
-class DataSource extends org.springframework.jdbc.datasource.DriverManagerDataSource {
+class DefaultDataSource() extends org.springframework.jdbc.datasource.DriverManagerDataSource {
 
   val filePath = s"${ConfigurationContext.getStringConfigOrDefault("confFile", getClass.getResource("/marvin.ini").getPath)}"
   val prop = new Properties()
+
   prop.load(new FileInputStream(filePath))
 
   setUrl(prop.get("jdbc.url").toString)
   setUsername(prop.get("jdbc.username").toString)
   setPassword(prop.get("jdbc.password").toString)
   setDriverClassName(prop.get("jdbc.driverClassName").toString)
-
 }
