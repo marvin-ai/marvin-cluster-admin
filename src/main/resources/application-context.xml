@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+  <tx:annotation-driven transaction-manager="transactionManager"/>
+
+  <context:component-scan base-package="org.marvin.cluster.manager"/>
+
+  <bean id="dataSource" class="org.marvin.cluster.manager.datasource.DefaultDataSource"/>
+
+  <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="packagesToScan" value="org.marvin.cluster.manager"/>
+    <property name="persistenceProviderClass" value="org.hibernate.jpa.HibernatePersistenceProvider"/>
+    <property name="dataSource" ref="dataSource"/>
+    <property name="jpaPropertyMap">
+      <map>
+        <entry key="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+        <entry key="hibernate.connection.charSet" value="UTF-8"/>
+        <entry key="hibernate.hbm2ddl.auto" value="update"/>
+        <entry key="hibernate.show.sql" value="true"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="entityManager"
+    class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
+</beans>
