@@ -27,7 +27,6 @@ import org.marvin.cluster.exception.EngineExceptionAndRejectionHandler._
 import org.marvin.cluster.manager.executor.ExecutorManagerClient.GetMetadata
 import org.marvin.model.EngineMetadata
 import spray.json._
-
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
