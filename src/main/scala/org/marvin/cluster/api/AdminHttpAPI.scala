@@ -16,7 +16,7 @@
  */
 package org.marvin.cluster.api
 
-import akka.actor.{ActorRef, ActorSystem, Props, Terminated}
+import akka.actor.{ActorRef, ActorSystem, Terminated}
 import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.server.Route
@@ -24,8 +24,8 @@ import akka.pattern.ask
 import akka.util.Timeout
 import org.marvin.cluster.api.AdminHttpAPI.DefaultHttpResponse
 import org.marvin.cluster.exception.EngineExceptionAndRejectionHandler._
-import org.marvin.cluster.manager.executor.ExecutorManagerClient
 import org.marvin.cluster.manager.executor.ExecutorManagerClient.GetMetadata
+import org.marvin.model.EngineMetadata
 import spray.json._
 
 import scala.concurrent._
@@ -34,8 +34,7 @@ import scala.util.{Failure, Success}
 
 trait AdminHttpAPIFunctions {
   def engines(): Future[String]
-  def setupSystem(engineFilePath:String, paramsFilePath:String, modelProtocol:String): ActorSystem
-  def startServer(ipAddress: String, port: Int, system: ActorSystem): Unit
+  def startServer(ipAddress: String, port: Int): Unit
   def terminate(): Future[Terminated]
   def routes: Route
 }
@@ -44,12 +43,12 @@ object AdminHttpAPI {
   case class DefaultHttpResponse(result: String)
 }
 
-class AdminHttpAPI() extends HttpMarvinApp with SprayJsonSupport with DefaultJsonProtocol {
+class AdminHttpAPI(system: ActorSystem,
+                   metadata: EngineMetadata,
+                   executorManagerClient: ActorRef) extends HttpMarvinApp with SprayJsonSupport with DefaultJsonProtocol with AdminHttpAPIFunctions {
 
-  var system: ActorSystem = _
-  var log: LoggingAdapter = _
-  var executorManagerClient: ActorRef = _
-  var defaultTimeout:Timeout = _
+  val log: LoggingAdapter = Logging.getLogger(system, this)
+  var defaultTimeout:Timeout = Timeout(metadata.batchActionTimeout milliseconds)
 
   implicit val responseFormat = jsonFormat1(DefaultHttpResponse)
 
@@ -77,21 +76,11 @@ class AdminHttpAPI() extends HttpMarvinApp with SprayJsonSupport with DefaultJso
     (executorManagerClient ? GetMetadata).mapTo[String]
   }
 
-  def setupSystem(engineFilePath:String, paramsFilePath:String, modelProtocol:String): ActorSystem = {
-    val system = ActorSystem(s"MarvinClusterAdminSystem")
-
-    log = Logging.getLogger(system, this)
-    defaultTimeout = Timeout(10 seconds)
-    executorManagerClient = system.actorOf(Props(new ExecutorManagerClient()), name = "executorMgrClient")
-
-    system
-  }
-
-  def startServer(ipAddress: String, port: Int, system: ActorSystem): Unit = {
+  override def startServer(ipAddress: String, port: Int): Unit = {
     scala.sys.addShutdownHook{
       system.terminate()
     }
-    startServer(ipAddress, port, system)
+    super.startServer(ipAddress, port, system)
   }
 
   def terminate(): Future[Terminated] = {

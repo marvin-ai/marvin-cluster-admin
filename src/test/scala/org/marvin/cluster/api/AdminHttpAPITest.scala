@@ -16,24 +16,22 @@
  */
 package org.marvin.executor.api
 
-import java.text.BreakIterator
-
-import akka.Done
-import akka.event.Logging
 import akka.http.scaladsl.model.{ContentTypes, StatusCode}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.testkit.TestProbe
-import akka.util.Timeout
+import org.marvin.cluster.api.AdminHttpAPI
 import org.marvin.cluster.manager.executor.ExecutorManagerClient.GetMetadata
-
-import scala.concurrent.duration._
+import org.marvin.fixtures.MetadataMock
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{Inside, Matchers, WordSpec}
 
 class AdminHttpAPITest extends WordSpec with ScalatestRouteTest with Matchers with Inside with MockFactory {
 
-  val route = AdminHttpAPI.routes
-  val testActors = setupAdminHttpAPIActors()
+  val metadata = MetadataMock.simpleMockedMetadata()
+  val testActors = TestProbe()
+
+  var api: AdminHttpAPI = new AdminHttpAPI(system, metadata, testActors.ref)
+  val route = api.routes
 
   "/engines endpoint" should {
 
@@ -43,29 +41,14 @@ class AdminHttpAPITest extends WordSpec with ScalatestRouteTest with Matchers wi
 
       val result = Get("/engines") ~> route ~> runRoute
 
-      testActors("executorManagerClient").expectMsg(GetMetadata)
-      testActors("executorManagerClient").reply(response)
+      testActors.expectMsg(GetMetadata)
+      testActors.reply(response)
 
       check {
         status shouldEqual StatusCode.int2StatusCode(200)
         contentType shouldEqual ContentTypes.`application/json`
-        responseAs[String] shouldEqual """{"result":"Done"}"""
+        responseAs[String] shouldEqual s"""{"result":"$response"}"""
       }(result)
     }
-  }
-
-  def setupAdminHttpAPIActors(): Map[String, TestProbe] = {
-    val timeout = Timeout(3 seconds)
-    AdminHttpAPI.system = system
-    AdminHttpAPI.defaultTimeout = timeout
-    AdminHttpAPI.log = Logging.getLogger(system, this)
-
-    val testActors = Map[String, TestProbe](
-      "executorManagerClient" -> TestProbe()
-    )
-
-    AdminHttpAPI.executorManagerClient = testActors("executorManagerClient").ref
-
-    testActors
   }
 }
