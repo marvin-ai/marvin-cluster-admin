@@ -28,7 +28,16 @@ libraryDependencies ++= Seq(
   "com.github.marvin-ai" %% "marvin-engine-executor" % "0.0.2",
   "com.typesafe.akka" %% "akka-http-testkit" % "10.0.10" % Test,
   "org.scalatest"     %% "scalatest"     % "3.0.1" % Test,
-  "org.scalamock"     %% "scalamock-scalatest-support" % "3.5.0" % Test
+  "org.scalamock"     %% "scalamock-scalatest-support" % "3.5.0" % Test,
+  "com.github.marvin-ai" %% "marvin-engine-executor" % "0.0.2",
+  "org.springframework" % "spring-context" % "5.0.1.RELEASE",
+  "org.springframework" % "spring-tx" % "4.3.12.RELEASE",
+  "org.springframework" % "spring-jdbc" % "4.3.12.RELEASE",
+  "org.springframework" % "spring-orm" % "4.3.12.RELEASE",
+  "mysql" % "mysql-connector-java" % "5.1.38",
+  "org.hsqldb" % "hsqldb" % "2.2.8",
+  "org.hibernate" % "hibernate-core" % "5.2.11.Final" exclude("dom4j", "dom4j"),
+  "dom4j" % "dom4j" % "1.6"
 )
 
 libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.0"
