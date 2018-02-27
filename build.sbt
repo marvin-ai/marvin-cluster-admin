@@ -19,7 +19,7 @@ version := "0.0.1"
 
 scalaVersion := "2.12.3"
 
-organization := "org.marvin"
+organization := "org.marvin-ai"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.0.10",
@@ -34,5 +34,5 @@ libraryDependencies ++= Seq(
 libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.0"
 libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.0"
 
-mainClass in (Compile, run) := Some("org.marvin.cluster.api.AdminHttpAPI")
-mainClass in assembly := Some("org.marvin.custer.api.AdminHttpAPI")
+mainClass in (Compile, run) := Some("org.marvin.cluster.ClusterAdminApp")
+mainClass in assembly := Some("org.marvin.cluster.ClusterAdminApp")
