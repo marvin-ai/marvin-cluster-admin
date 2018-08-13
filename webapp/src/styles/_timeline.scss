@@ -1,0 +1,210 @@
+.all-timeline {
+    position: relative;
+    &:before {
+        position: absolute;
+        left: 220px;
+        bottom: 0;
+        content: ' ';
+        display: block;
+        width: 1px;
+        height: 100%;
+        margin-left: -1px;
+        background: #CCC;
+        max-width: 200px;
+    }
+}
+
+.timeline-term {
+    background: $white;
+    border: 1px solid $blue;
+    font-size: 13px;
+    color: $grey-2;
+    width: 180px;
+    position: relative;
+    text-align: center;
+    padding: 6px 0;
+    background-color: $grey-4;
+    border-radius: 3px;
+    float: left;
+}
+
+.timeline-description {
+    margin-left: 224px;
+    padding-left: 15px;
+    margin-bottom: 20px;
+    position: relative;
+    &:before {
+        content: '';
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        background: #429edb;
+        border-radius: 50%;
+        left: -11px;
+    }
+    &.center-bullet{
+       &:before{
+        top: 45%;
+       } 
+    }
+    img {
+        width: 65px;
+        border: 1px solid#ccc;
+        padding: 5px;
+    }
+}
+
+.timeline-box-message {
+    width: 100%;
+    margin-top: 10px;
+    background-color: #e1f0c8;
+    padding: 10px 10px;
+    font-size: 13px;
+    color:#484848;
+    margin: 10px 0 50px 115px;
+}
+
+.timeline-box {
+    border-left: 1px solid #fadca0;
+    border-right: 1px solid #fadca0;
+    border-bottom: 1px solid #fadca0;
+    margin: 0 20px 20px 20px;
+    padding: 40px;
+    position: relative;
+    &:after{
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #666;
+        border-radius: 50%;
+        left: 140px;
+        bottom: 226px;
+        z-index: 1;
+    }
+    .hold-preloader{
+        height: 100px;
+        padding: 50px 0 0 130px;
+        overflow: hidden;
+        clear: both;
+    }
+    .hold-load-more{
+        height: 100px;
+        padding: 50px 0 0 130px;
+        overflow: hidden;
+        clear: both;
+    }
+}
+
+.timeline-table tr, .timeline-table td, .timeline-table tbody {
+    border: 0 !important;
+}
+
+.timeline-table th {
+    border-top: 0 !important;
+    padding-left: 0 !important;
+}
+
+.timeline-table tr:first-child td {
+    padding: 15px 0 45px 0 !important;
+}
+
+.timeline-table td {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.timeline-filter-header {
+    padding: 2px 12px;
+    margin: 0px 20px;
+    height: 40px;
+}
+
+.timeline-filter-title {
+    display: block;
+    padding: 8px 10px 8px 10px;
+    font-size: 13px;
+    color: #4a4a4a;
+}
+
+.generated-json-container{
+    width: 850px;
+    margin: 0 0 50px 115px;
+}
+
+.js-timeline-xml-export{
+    clear: both;
+}
+
+.timeline-box-export{
+    clear: both;
+    padding-top: 30px;
+    .all-timeline{
+        padding-bottom: 50px;
+        float: none;
+        margin: 0 auto;
+        &:after{
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #666;
+            border-radius: 50%;
+            left: 100px;
+            bottom: 0; 
+            z-index: 1;
+        }
+    }  
+}
+
+.card-timeline{
+    border: 1px solid $grey-1;	
+    border-radius: 3px 3px 0 0;	
+    background-color: $white;	
+    box-shadow: 0 4px 9px 0 rgba(0,0,0,0.02);
+    .card-timeline-header{
+        border-bottom: 1px solid $grey-1;
+        box-shadow: 0 4px 9px 0 rgba(0,0,0,0.02);
+        overflow: hidden;
+        padding: 20px 20px 10px 20px;
+        h4{
+            color: $grey-2;	
+            font-size: 16px;
+            font-weight: 500;
+            float: left;
+        }
+        .card-infos{
+            float: right;
+            margin-bottom: 0;
+            li{
+                display: inline-block;
+                border-right: 1px solid $grey-1;
+                padding: 0 10px;
+                &:last-child{
+                    border-right: 0;
+                }
+            }
+        }
+    }
+    .card-timeline-body{
+        padding: 20px;
+        h4{
+            font-size: 16px
+        }
+    }
+    .card-timeline-footer{
+        clear: both;
+        border-top: 1px solid $grey-1;
+        margin-top: 30px;
+        padding-top: 20px;
+        .text-footer{
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+        .button.small{
+            padding: 5px 20px;
+            margin-top: 10px;
+            margin-left: 10px;
+        }    
+    }
+}
