@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.marvin.cluster.api.exception
+package org.marvin.cluster.exception
 
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._

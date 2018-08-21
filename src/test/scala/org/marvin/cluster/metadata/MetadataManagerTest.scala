@@ -44,7 +44,7 @@ class MetadataManagerTest extends TestKit(
 
       actor ! Save(metadata)
 
-      within(8000 millis) {
+      within(30000 millis) {
         expectMsg(Done)
       }
     }
@@ -55,12 +55,12 @@ class MetadataManagerTest extends TestKit(
       val metadata = MetadataMock.simpleMockedMetadata()
 
       actor ! Save(metadata)
-      within(8000 millis) {
+      within(30000 millis) {
         expectMsg(Done)
       }
 
       actor ! GetById(1)
-      within(8000 millis) {
+      within(30000 millis) {
         expectMsg(1)
       }
     }
@@ -70,7 +70,7 @@ class MetadataManagerTest extends TestKit(
       val actor = system.actorOf(Props(new MetadataManager()))
 
       actor ! GetById(3)
-      within(8000 millis) {
+      within(30000 millis) {
         expectMsg(None)
       }
     }

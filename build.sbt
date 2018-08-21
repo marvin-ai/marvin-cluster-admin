@@ -25,6 +25,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.0.10",
   "com.typesafe.akka" %% "akka-http-spray-json" % "10.0.10",
   "org.clapper"       %% "grizzled-slf4j" % "1.3.0",
+  "com.github.marvin-ai" %% "marvin-engine-executor" % "0.0.2",
   "com.typesafe.akka" %% "akka-http-testkit" % "10.0.10" % Test,
   "org.scalatest"     %% "scalatest"     % "3.0.1" % Test,
   "org.scalamock"     %% "scalamock-scalatest-support" % "3.5.0" % Test,
@@ -39,7 +40,8 @@ libraryDependencies ++= Seq(
   "dom4j" % "dom4j" % "1.6"
 )
 
-resolvers += Resolver.mavenLocal
+libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.0"
+libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.0"
 
-mainClass in (Compile, run) := Some("org.marvin.cluster.api.AdminHttpAPI")
-mainClass in assembly := Some("org.marvin.custer.api.AdminHttpAPI")
+mainClass in (Compile, run) := Some("org.marvin.cluster.ClusterAdminApp")
+mainClass in assembly := Some("org.marvin.cluster.ClusterAdminApp")
